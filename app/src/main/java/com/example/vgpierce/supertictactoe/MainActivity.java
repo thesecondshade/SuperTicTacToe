@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
         sButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Change to gameBoard Activity
-                Intent intent = new Intent(v.getContext(), GameboradActivity.class);
+                Intent intent = new Intent(v.getContext(), GameboardActivity.class);
                 startActivity(intent);
             }
         });

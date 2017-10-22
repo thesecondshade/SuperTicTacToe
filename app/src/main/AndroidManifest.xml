@@ -20,6 +20,14 @@
             android:name=".OptionsActivity"
             android:label="@string/title_activity_options"
             android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".draw"
+            android:label="@string/title_activity_options"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".GameboardActivity"
+            android:label="@string/title_activity_options"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
