@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Super TicTacToe</string>
+    <string name="startButton_id">startButton</string>
+    <string name="optionsButton_id">optionsButton</string>
+    <string name="quitButton_id">quitButton</string>
+    <string name="title_activity_options">OptionsActivity</string>
 </resources>
