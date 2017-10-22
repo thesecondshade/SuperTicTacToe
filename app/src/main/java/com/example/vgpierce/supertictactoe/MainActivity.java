@@ -19,8 +19,10 @@ public class MainActivity extends AppCompatActivity {
         sButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 //Change to gameBoard Activity
-                Intent intent = new Intent(v.getContext(), GameboradActivity.class);
-                startActivity(intent);
+              //  Intent intent = new Intent(v.getContext(), GameboradActivity.class);
+              // startActivity(intent);
+                TicTacToe tct = new TicTacToe();
+                tct.getGameBoard();
             }
         });
         oButton.setOnClickListener(new View.OnClickListener() {
