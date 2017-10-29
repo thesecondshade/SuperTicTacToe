@@ -16,11 +16,9 @@ public class GameboardActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         drawView = new draw(this);
         drawView.setBackgroundColor(Color.WHITE);
         setContentView(drawView);
-
         }
     }
 
