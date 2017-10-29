@@ -17,10 +17,6 @@ public class TicTacToe {
                 gameSlots[x][y] = 0;
             }
         }
-        this.posX = posX;
-        this.posY = posY;
-        this.width = width;
-        this.height = height;
     }
     public boolean setValue(int x, int y, int value){
         if(gameSlots[x][y] == 0){
@@ -40,13 +36,16 @@ public class TicTacToe {
                         //Possibly redundant
                     p.x = x;
                     p.y = y;
+                    return p;
                 }
             }
         }
-        return p;
+        return new Point(-1,-1);
     }
     public boolean makeMove(float pX, float pY, int value){
         Point point = getGridValue(pX,pY);
+        if(point.x == -1)
+            return false;
         return setValue(point.x,point.y,value);
     }
     public boolean checkVictory(){

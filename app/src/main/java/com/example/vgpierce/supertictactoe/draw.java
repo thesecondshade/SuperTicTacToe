@@ -18,13 +18,20 @@ public class draw extends View {
     private void init() {
         paint.setColor(Color.BLACK);
     }
+    //Variables for touch position
     float xPos = 0;
     float yPos = 0;
+    //Values for highlight Box
+    float highlightXPos = 0;
+    float highLightYPos = 0;
+    float highlightWidth = 0;
+    float highlightHeight = 0;
     //1 for X's
     //-1 for O's
     int playerTurn = 1;
     TicTacToe masterTicTacToeBoard = new TicTacToe();
     TicTacToe[] gameBoards = new TicTacToe[9];
+    TicTacToe currentGameBoard = masterTicTacToeBoard;
     public draw(Context context) {
         super(context);
         for(int i = 0;i<9;i++){
@@ -48,6 +55,14 @@ public class draw extends View {
         super.onDraw(canvas);
         int cW = canvas.getWidth();
         int cH = canvas.getHeight();
+        if(highlightWidth == 0){
+            highlightWidth = cW;
+            highlightHeight = cH;
+        }
+        paint.setStrokeWidth(25);
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        canvas.drawRect(highlightXPos,highLightYPos,highlightWidth,highlightHeight,paint);
 //        int[][]  corners  =  {{0, 0},  {x/3, y/3},
 //                {x/3, 0},  {(2*x)/3, y/3},
 //                {(2*x)/3,0}, {x, y / 3},
@@ -58,6 +73,8 @@ public class draw extends View {
 //                {x/3,(2*y)/3}, {(2*x)/3, y},
 //                {(2*x)/3,(2*y)/3},{x,y},
 //        };
+        paint.setColor(Color.BLACK);
+
         int[][]  corners  =  {{0, 0},  {cW/3, 0}, {2*cW/3, 0},
                 {0, cH/3}, {cW/3,cH/3}, {2*cW/3, cH/3},
                 {0, 2*cH/3}, {cW/3,2*cH/3}, {2*cW/3, 2*cH/3}
@@ -131,13 +148,31 @@ public class draw extends View {
             case MotionEvent.ACTION_DOWN :
                 xPos = event.getX();
                 yPos = event.getY();
-                Point gridPoint = masterTicTacToeBoard.getGridValue(xPos,yPos);
-                Log.d("Tic Tac Toe",gridPoint.toString());
-                if(gameBoards[(gridPoint.x)+(gridPoint.y*3)].makeMove(xPos,yPos,playerTurn)){
-                    playerTurn *=-1;
+                Point gridPoint = currentGameBoard.getGridValue(xPos,yPos);
+                if(currentGameBoard == masterTicTacToeBoard){
+                    Log.d("Tic Tac Toe","Master");
+                    currentGameBoard = gameBoards[(gridPoint.x)+(gridPoint.y*3)];
                 }
 
-                Log.d("Touch Event","Touched at " + xPos + " " + yPos);
+                if(currentGameBoard.makeMove(xPos,yPos,playerTurn)){
+                    playerTurn *=-1;
+
+                    highlightXPos = currentGameBoard.getPosX();
+                    highLightYPos = currentGameBoard.getPosY();
+                    highlightWidth = currentGameBoard.getWidth();
+                    highlightHeight = currentGameBoard.getHeight();
+                    if(currentGameBoard.checkVictory()){
+                        masterTicTacToeBoard.makeMove(xPos,yPos,-playerTurn);
+                    }
+                    currentGameBoard = gameBoards[(gridPoint.x)+(gridPoint.y*3)];
+                    Log.d("Highlight",highlightXPos + " " + highLightYPos + " " + highlightWidth + " " + highlightHeight);
+                }
+                if(masterTicTacToeBoard.checkVictory()){
+                    Log.d("Game Event", "GAME OVER!");
+                }
+
+                Log.d("Touch Event","Touched at " + gridPoint.x + " " + gridPoint.y);
+
                 invalidate();
                 break;
         }
