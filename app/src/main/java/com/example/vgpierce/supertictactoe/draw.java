@@ -23,7 +23,7 @@ public class draw extends View {
     float yPos = 0;
     //Values for highlight Box
     float highlightXPos = 0;
-    float highLightYPos = 0;
+    float highlightYPos = 0;
     float highlightWidth = 0;
     float highlightHeight = 0;
     //1 for X's
@@ -32,6 +32,8 @@ public class draw extends View {
     TicTacToe masterTicTacToeBoard = new TicTacToe();
     TicTacToe[] gameBoards = new TicTacToe[9];
     TicTacToe currentGameBoard = masterTicTacToeBoard;
+
+    boolean gameOver = false;
     public draw(Context context) {
         super(context);
         for(int i = 0;i<9;i++){
@@ -59,10 +61,6 @@ public class draw extends View {
             highlightWidth = cW;
             highlightHeight = cH;
         }
-        paint.setStrokeWidth(25);
-        paint.setColor(Color.GREEN);
-        paint.setStyle(Paint.Style.STROKE);
-        canvas.drawRect(highlightXPos,highLightYPos,highlightWidth,highlightHeight,paint);
 //        int[][]  corners  =  {{0, 0},  {x/3, y/3},
 //                {x/3, 0},  {(2*x)/3, y/3},
 //                {(2*x)/3,0}, {x, y / 3},
@@ -86,6 +84,24 @@ public class draw extends View {
             gameBoards[i].setDimensions(corners[i][0],corners[i][1],cW/3,cH/3);
             drawTicTacToeBoard(canvas,gameBoards[i]);
         }
+        paint.setTextSize(100);
+        if(gameOver){
+            //Opposite player's turn on victory
+            if(playerTurn == 1)
+                canvas.drawText("O's WINS!",cW/2,cH/2,paint);
+            else{
+                canvas.drawText("X's WINS!",cW/2,cH/2,paint);
+            }
+        }
+        paint.setStrokeWidth(10);
+        paint.setColor(Color.GREEN);
+        paint.setStyle(Paint.Style.STROKE);
+        Log.d("Highlight",highlightXPos + " " + highlightYPos + " " +highlightWidth + " " + highlightHeight);
+        //Manually drawing the highlight rectangle because I cannot figure out the drawRect method! Why why why
+        canvas.drawLine(highlightXPos,highlightYPos,highlightXPos,highlightYPos+highlightHeight,paint);
+        canvas.drawLine(highlightXPos+highlightWidth,highlightYPos,highlightXPos+highlightWidth,highlightYPos+highlightHeight,paint);
+        canvas.drawLine(highlightXPos,highlightYPos,highlightXPos+highlightWidth,highlightYPos,paint);
+        canvas.drawLine(highlightXPos,highlightYPos+highlightHeight,highlightXPos+highlightWidth,highlightYPos+highlightHeight,paint);
 
     }
     public void game(Canvas canvas, int x1, int y1, int x2, int y2) {
@@ -148,31 +164,29 @@ public class draw extends View {
             case MotionEvent.ACTION_DOWN :
                 xPos = event.getX();
                 yPos = event.getY();
-                Point gridPoint = currentGameBoard.getGridValue(xPos,yPos);
+                Point gridPoint =   currentGameBoard.getGridValue(xPos,yPos);
                 if(currentGameBoard == masterTicTacToeBoard){
                     Log.d("Tic Tac Toe","Master");
                     currentGameBoard = gameBoards[(gridPoint.x)+(gridPoint.y*3)];
                 }
-
+                gridPoint = currentGameBoard.getGridValue(xPos,yPos);
                 if(currentGameBoard.makeMove(xPos,yPos,playerTurn)){
                     playerTurn *=-1;
-
-                    highlightXPos = currentGameBoard.getPosX();
-                    highLightYPos = currentGameBoard.getPosY();
-                    highlightWidth = currentGameBoard.getWidth();
-                    highlightHeight = currentGameBoard.getHeight();
                     if(currentGameBoard.checkVictory()){
                         masterTicTacToeBoard.makeMove(xPos,yPos,-playerTurn);
                     }
                     currentGameBoard = gameBoards[(gridPoint.x)+(gridPoint.y*3)];
-                    Log.d("Highlight",highlightXPos + " " + highLightYPos + " " + highlightWidth + " " + highlightHeight);
+                    if(currentGameBoard.checkVictory()){
+                        currentGameBoard = masterTicTacToeBoard;
+                    }
+                    highlightXPos = currentGameBoard.getPosX();
+                    highlightYPos = currentGameBoard.getPosY();
+                    highlightWidth = currentGameBoard.getWidth();
+                    highlightHeight = currentGameBoard.getHeight();
                 }
-                if(masterTicTacToeBoard.checkVictory()){
-                    Log.d("Game Event", "GAME OVER!");
+                if(masterTicTacToeBoard.checkVictory()) {
+                    gameOver = true;
                 }
-
-                Log.d("Touch Event","Touched at " + gridPoint.x + " " + gridPoint.y);
-
                 invalidate();
                 break;
         }
