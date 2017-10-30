@@ -59,7 +59,7 @@ public class TicTacToe {
             if(gameSlots[1][1] == gameSlots[0][0] && gameSlots[1][1] == gameSlots[2][2]){
                 return true;
             }
-            if(gameSlots[2][0] == gameSlots[0][1] && gameSlots[1][1] == gameSlots[0][2]){
+            if(gameSlots[1][1] == gameSlots[2][0] && gameSlots[1][1] == gameSlots[0][2]){
                 return true;
             }
         }
